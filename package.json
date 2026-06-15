@@ -1,0 +1,6 @@
+{
+  "name": "pi-dev-setup",
+  "version": "1.0.0",
+  "description": "Personal pi coding-agent extensions: git helpers, web search, status widgets, and TPS tracking.",
+  "license": "MIT"
+}

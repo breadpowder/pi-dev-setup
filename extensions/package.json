@@ -1,0 +1,8 @@
+{
+  "name": "pi-dev-extensions",
+  "version": "1.0.0",
+  "description": "User-level pi extensions for git workflow, web search, and UI widgets.",
+  "dependencies": {
+    "@mendable/firecrawl-js": "^4.20.0"
+  }
+}
