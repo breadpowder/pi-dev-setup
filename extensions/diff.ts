@@ -1,7 +1,19 @@
 import path from "node:path";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
 
 const commandName = "diff";
+
+function isHeadless(ctx: ExtensionCommandContext): boolean {
+  return ctx.mode !== "tui";
+}
+
+function report(ctx: ExtensionCommandContext, message: string, type: "info" | "warning" | "error" = "info") {
+  if (isHeadless(ctx)) {
+    console.log(`[${commandName}] ${message}`);
+    return;
+  }
+  ctx.ui.notify(message, type);
+}
 
 function getStringPath(input: unknown) {
   if (!input || typeof input !== "object" || !("path" in input)) return undefined;
@@ -74,7 +86,7 @@ export default function (pi: ExtensionAPI) {
     const gitChanged = await getGitChangedFiles(pi, ctx.cwd);
     changedFiles = new Set([...difference(gitChanged, gitBaseline), ...toolTouchedFiles]);
 
-    if (changedFiles.size > 0) {
+    if (changedFiles.size > 0 && ctx.mode === "tui") {
       ctx.ui.notify(`${changedFiles.size} changed file(s). Run /${commandName} to view/open in Zed.`, "info");
     }
   });
@@ -89,23 +101,35 @@ export default function (pi: ExtensionAPI) {
         changedFiles = new Set();
         toolTouchedFiles = new Set();
         gitBaseline = await getGitChangedFiles(pi, ctx.cwd);
-        ctx.ui.notify("Cleared changed file list", "info");
+        report(ctx, "Cleared changed file list");
         return;
       }
 
-      const files = [...changedFiles].sort((a, b) => toRelative(ctx.cwd, a).localeCompare(toRelative(ctx.cwd, b)));
+      let files = [...changedFiles].sort((a, b) => toRelative(ctx.cwd, a).localeCompare(toRelative(ctx.cwd, b)));
+
+      // In headless mode, fall back to live git status so /diff works across invocations.
+      if (files.length === 0 && isHeadless(ctx)) {
+        files = [...await getGitChangedFiles(pi, ctx.cwd)].sort((a, b) =>
+          toRelative(ctx.cwd, a).localeCompare(toRelative(ctx.cwd, b))
+        );
+      }
+
       if (files.length === 0) {
-        ctx.ui.notify("No changed files tracked from the last agent run", "info");
+        report(ctx, "No changed files tracked from the last agent run");
         return;
       }
 
-      if (arg === "list") {
-        ctx.ui.notify(`Changed files:\n${files.map((file) => `- ${toRelative(ctx.cwd, file)}`).join("\n")}`, "info");
-        return;
+      if (arg === "list" || arg === "") {
+        const lines = files.map((file) => `- ${toRelative(ctx.cwd, file)}`).join("\n");
+        report(ctx, `Changed files:\n${lines}`);
+
+        if (isHeadless(ctx)) {
+          return;
+        }
       }
 
-      if (arg) {
-        ctx.ui.notify(`Unknown /${commandName} argument: ${arg}. Try /${commandName}, /${commandName} list, or /${commandName} clear.`, "warning");
+      if (arg && arg !== "list") {
+        report(ctx, `Unknown /${commandName} argument: ${arg}. Try /${commandName}, /${commandName} list, or /${commandName} clear.`, "warning");
         return;
       }
 
