@@ -11,8 +11,8 @@ Tested by running commands with `pi -p "<command>"` and `pi --mode json -p "<com
 | `goal.ts` | ✅ Yes | active | `/goal` and tools (`create_goal`, `update_goal`, `get_goal`) emit custom messages that work in JSON/print mode. |
 | `herdr-agent-state.ts` | ✅ Yes | active | No UI; reports state over a socket. No-op when herdr is absent. |
 | `pi-cloak/index.ts` | ✅ Yes | active | Intercepts `tool_result` events with no UI dependency. |
-| `tps-tracker.ts` | ⚠️ Partial | active | Uses `ctx.ui.setStatus`/`notify`; no-op headless. However, it throws a stale-ctx error during agent turns in print/JSON mode, which breaks other commands that trigger agent turns (e.g., `/yeet`). |
-| `yeet.ts` | ❌ No | active | `/yeet` sends a user message, which triggers an agent turn. The `tps-tracker.ts` extension throws a stale-ctx error during that turn and hangs. |
+| `tps-tracker.ts` | ✅ Yes | active | Guards all `ctx.ui.*` calls with `ctx.hasUI`. No-op in headless mode; does not break agent turns. |
+| `yeet.ts` | ✅ Yes | active | In headless mode `/yeet` runs git add/commit/push directly via `child_process` and prints the result. In TUI mode it delegates to the LLM via `sendUserMessage`. |
 | `answer.ts` | ❌ No | **removed** | Required TUI (`ctx.ui.custom`). Headless: silently did nothing. |
 | `git-status-widget.ts` | ⚠️ Partial | **removed** | Registered handlers but used `ctx.ui.setWidget`, which was a no-op headless. |
 | `lg.ts` | ❌ No | **removed** | `/lg` sent a user message that triggered an agent turn; hung due to `tps-tracker.ts` stale-ctx error. |
