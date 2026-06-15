@@ -3,7 +3,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 const YEET_PROMPT = `Commit and push the current repository changes.
 
 Steps:
-1. Add all unstaged changes with \`git add -A\`.
+1. Identify the files that were modified during this coding session. Add only those relevant files with \`git add <file>...\`; do not use \`git add -A\`.
 2. Inspect the staged changes and write a concise commit message that accurately summarizes them.
 3. Commit the changes with that message.
 4. Push the commit to the current branch's remote.
