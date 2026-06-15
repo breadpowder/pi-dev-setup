@@ -8,6 +8,7 @@ export default function (pi: ExtensionAPI) {
   let totalStreamMs = 0;
 
   pi.on("agent_start", async (_event, ctx) => {
+    if (!ctx.hasUI) return;
     totalOutputTokens = 0;
     totalStreamMs = 0;
     messageStart = null;
@@ -25,6 +26,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("message_update", async (event, ctx) => {
+    if (!ctx.hasUI) return;
     if (event.message.role !== "assistant") return;
 
     const streamEvent = event.assistantMessageEvent;
@@ -77,6 +79,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.on("agent_end", async (_event, ctx) => {
+    if (!ctx.hasUI) return;
     const elapsed = totalStreamMs / 1000;
     const tps = totalOutputTokens > 0 && elapsed > 0 ? Math.round(totalOutputTokens / elapsed) : 0;
 
