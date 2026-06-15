@@ -10,11 +10,13 @@ cd pi-dev-setup
 ./install.sh
 ```
 
-This copies the extensions into `~/.pi/agent/extensions/` and installs their npm dependencies.
+This symlinks `~/.pi/agent/extensions` to the repo's `extensions/` directory and installs npm dependencies there.
+
+Because it's a symlink, any edit you make in this repo is immediately active — no re-run needed.
 
 ## Update
 
-Pull the repo and re-run `./install.sh`. It overwrites the tracked extensions with the latest versions.
+Pull the repo. The symlink already points to the latest files. Run `./install.sh` only if dependencies changed.
 
 ## What's included
 
