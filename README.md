@@ -34,12 +34,37 @@ Pull the repo and re-run `./install.sh`. It overwrites the tracked extensions wi
 - **git-status-widget** — Shows current branch + unstaged file count above the editor.
 - **tps-tracker** — Live tokens-per-second display during generation.
 
+### Agent workflow
+
+- **answer** — `/answer` (or `ctrl+.`) extracts unanswered questions from the last assistant message into an interactive Q&A UI.
+- **goal** — `/goal` plus `create_goal`/`update_goal`/`get_goal` tools for long-running objectives with token budgets and elapsed-time tracking.
+- **pi-cloak** — Redacts sensitive patterns from `read` tool output using regex rules in `~/.pi/agent/cloak.json`.
+- **herdr-agent-state** — Reports agent working/blocked/idle state to the `herdr` pane manager (no-op when herdr is not running).
+
 ## Environment variables
 
 Add to `~/.pi/agent/.env`:
 
 ```bash
 FIRECRAWL_API_KEY=fc-...
+```
+
+## pi-cloak configuration
+
+Create `~/.pi/agent/cloak.json` to redact secrets from files the agent reads:
+
+```json
+{
+  "enabled": true,
+  "cloakCharacter": "*",
+  "patterns": [
+    {
+      "filePattern": "**/.env*",
+      "cloakPattern": "(API_KEY|TOKEN|SECRET)=.*",
+      "replace": "$1=***"
+    }
+  ]
+}
 ```
 
 ## Local development
