@@ -1,6 +1,6 @@
 # pi-dev-setup
 
-User-level pi extensions for git workflow, web search, and UI widgets.
+User-level pi extensions for git workflow, web search, and agent state.
 
 ## Install on a new host
 
@@ -20,8 +20,6 @@ Pull the repo and re-run `./install.sh`. It overwrites the tracked extensions wi
 
 ### Git workflow helpers
 
-- `/diff` — Show files changed by the last agent run and open one in Zed.
-- `/lg` — Summarize unstaged git changes with per-file +/- counts.
 - `/yeet` — Add, commit, and push current repo changes.
 
 ### Web search & scraping
@@ -29,14 +27,12 @@ Pull the repo and re-run `./install.sh`. It overwrites the tracked extensions wi
 - `search` tool — Web/news/image search via Firecrawl.
 - `scrape` tool — Fetch a page as markdown via Firecrawl.
 
-### UI & status
+### Status & tracking
 
-- **git-status-widget** — Shows current branch + unstaged file count above the editor.
 - **tps-tracker** — Live tokens-per-second display during generation.
 
 ### Agent workflow
 
-- **answer** — `/answer` (or `ctrl+.`) extracts unanswered questions from the last assistant message into an interactive Q&A UI.
 - **goal** — `/goal` plus `create_goal`/`update_goal`/`get_goal` tools for long-running objectives with token budgets and elapsed-time tracking.
 - **pi-cloak** — Redacts sensitive patterns from `read` tool output using regex rules in `~/.pi/agent/cloak.json`.
 - **herdr-agent-state** — Reports agent working/blocked/idle state to the `herdr` pane manager (no-op when herdr is not running).

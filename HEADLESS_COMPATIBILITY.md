@@ -4,18 +4,18 @@ Tested by running commands with `pi -p "<command>"` and `pi --mode json -p "<com
 
 ## Summary
 
-| Extension | Headless | Notes |
-|---|---|---|
-| `answer.ts` | ❌ No | Requires TUI (`ctx.ui.custom`). Headless: silently does nothing. |
-| `diff.ts` | ✅ Yes | Prints changed files to stdout in headless mode; falls back to live git status. |
-| `firecrawl-search.ts` | ✅ Yes | Tools (`search`, `scrape`) have no TUI dependency. |
-| `git-status-widget.ts` | ⚠️ Partial | Registers handlers but uses `ctx.ui.setWidget`, which is a no-op headless. Does not break. |
-| `goal.ts` | ✅ Yes | `/goal` and tools (`create_goal`, `update_goal`, `get_goal`) emit custom messages that work in JSON/print mode. |
-| `herdr-agent-state.ts` | ✅ Yes | No UI; reports state over a socket. No-op when herdr is absent. |
-| `lg.ts` | ❌ No | `/lg` sends a user message, which triggers an agent turn. The `tps-tracker.ts` extension throws a stale-ctx error during that turn and hangs. |
-| `pi-cloak/index.ts` | ✅ Yes | Intercepts `tool_result` events with no UI dependency. |
-| `tps-tracker.ts` | ⚠️ Partial | Uses `ctx.ui.setStatus`/`notify`; no-op headless. However, it throws a stale-ctx error during agent turns in print/JSON mode, which breaks other commands that trigger agent turns (e.g., `/lg`, `/yeet`). |
-| `yeet.ts` | ❌ No | `/yeet` sends a user message, which triggers an agent turn. The `tps-tracker.ts` extension throws a stale-ctx error during that turn and hangs. |
+| Extension | Headless | Status | Notes |
+|---|---|---|---|
+| `diff.ts` | ✅ Yes | **removed** | Printed changed files to stdout in headless mode; fell back to live git status. |
+| `firecrawl-search.ts` | ✅ Yes | active | Tools (`search`, `scrape`) have no TUI dependency. |
+| `goal.ts` | ✅ Yes | active | `/goal` and tools (`create_goal`, `update_goal`, `get_goal`) emit custom messages that work in JSON/print mode. |
+| `herdr-agent-state.ts` | ✅ Yes | active | No UI; reports state over a socket. No-op when herdr is absent. |
+| `pi-cloak/index.ts` | ✅ Yes | active | Intercepts `tool_result` events with no UI dependency. |
+| `tps-tracker.ts` | ⚠️ Partial | active | Uses `ctx.ui.setStatus`/`notify`; no-op headless. However, it throws a stale-ctx error during agent turns in print/JSON mode, which breaks other commands that trigger agent turns (e.g., `/yeet`). |
+| `yeet.ts` | ❌ No | active | `/yeet` sends a user message, which triggers an agent turn. The `tps-tracker.ts` extension throws a stale-ctx error during that turn and hangs. |
+| `answer.ts` | ❌ No | **removed** | Required TUI (`ctx.ui.custom`). Headless: silently did nothing. |
+| `git-status-widget.ts` | ⚠️ Partial | **removed** | Registered handlers but used `ctx.ui.setWidget`, which was a no-op headless. |
+| `lg.ts` | ❌ No | **removed** | `/lg` sent a user message that triggered an agent turn; hung due to `tps-tracker.ts` stale-ctx error. |
 
 ## Detailed findings
 
