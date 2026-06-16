@@ -47,6 +47,47 @@ Add to `~/.pi/agent/.env`:
 FIRECRAWL_API_KEY=fc-...
 ```
 
+## Providers
+
+Pi supports both subscription (OAuth) and API-key providers.
+
+### Subscription login
+
+In interactive mode, run:
+
+```text
+/login
+```
+
+Built-in subscription providers:
+
+- **ChatGPT Plus/Pro** — OpenAI Codex
+- **Claude Pro/Max** — uses extra usage, billed per token
+- **GitHub Copilot**
+
+Credentials are stored in `~/.pi/agent/auth.json` and auto-refresh.
+
+### API keys
+
+Set before launching pi:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+pi
+```
+
+Or run `/login` and select a provider to store the key in `auth.json`.
+
+Common providers: Anthropic, OpenAI, DeepSeek, Google Gemini, Mistral, Groq, Cerebras, OpenRouter, Vercel, Fireworks, Together, Kimi, and more.
+
+### Custom providers
+
+For OpenAI-compatible servers (Ollama, vLLM, LM Studio, proxies), add entries to `~/.pi/agent/models.json`.
+
+For custom APIs or OAuth flows, create an extension using `pi.registerProvider()`.
+
+See the [Pi providers documentation](https://pi.dev/docs/providers) for the full list.
+
 ## pi-cloak configuration
 
 Create `~/.pi/agent/cloak.json` to redact secrets from files the agent reads:
