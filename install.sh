@@ -3,27 +3,41 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 SOURCE_EXTENSIONS="$REPO_DIR/extensions"
-TARGET_DIR="$HOME/.pi/agent/extensions"
-BACKUP_DIR="$HOME/.pi/agent/extensions.bak.$(date +%s)"
+SOURCE_MODELS="$REPO_DIR/models.json"
+TARGET_EXTENSIONS="$HOME/.pi/agent/extensions"
+TARGET_MODELS="$HOME/.pi/agent/models.json"
+BACKUP_DIR="$HOME/.pi/agent/backups/$(date +%s)"
 
-# If the target already exists and is not our symlink, back it up.
-if [ -e "$TARGET_DIR" ] && ! [ -L "$TARGET_DIR" ]; then
-  echo "Backing up existing extensions to $BACKUP_DIR"
-  mv "$TARGET_DIR" "$BACKUP_DIR"
+backup_if_needed() {
+  local target="$1"
+  if [ -e "$target" ] && ! [ -L "$target" ]; then
+    mkdir -p "$BACKUP_DIR"
+    echo "Backing up $target to $BACKUP_DIR"
+    mv "$target" "$BACKUP_DIR/"
+  fi
+}
+
+# Symlink extensions directory.
+backup_if_needed "$TARGET_EXTENSIONS"
+ln -sfn "$SOURCE_EXTENSIONS" "$TARGET_EXTENSIONS"
+echo "Linked $TARGET_EXTENSIONS -> $SOURCE_EXTENSIONS"
+
+# Symlink models.json if it exists in the repo.
+if [ -f "$SOURCE_MODELS" ]; then
+  backup_if_needed "$TARGET_MODELS"
+  ln -sfn "$SOURCE_MODELS" "$TARGET_MODELS"
+  echo "Linked $TARGET_MODELS -> $SOURCE_MODELS"
 fi
-
-# Ensure the symlink points to this repo's extensions directory.
-ln -sfn "$SOURCE_EXTENSIONS" "$TARGET_DIR"
-
-echo "Linked $TARGET_DIR -> $SOURCE_EXTENSIONS"
 
 # Install dependencies in the repo's extensions directory so the symlink target is self-contained.
 cd "$SOURCE_EXTENSIONS"
 npm install
 
 echo ""
-echo "Pi extensions linked to $TARGET_DIR"
+echo "Pi extensions linked to $TARGET_EXTENSIONS"
 echo "Updates in $SOURCE_EXTENSIONS are immediately active."
+echo ""
+echo "Models configured in $TARGET_MODELS"
 echo ""
 echo "Add your API keys to ~/.pi/agent/.env if needed:"
 echo "  FIRECRAWL_API_KEY=fc-..."

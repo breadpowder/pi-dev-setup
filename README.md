@@ -80,6 +80,21 @@ Or run `/login` and select a provider to store the key in `auth.json`.
 
 Common providers: Anthropic, OpenAI, DeepSeek, Google Gemini, Mistral, Groq, Cerebras, OpenRouter, Vercel, Fireworks, Together, Kimi, and more.
 
+### Local LiteLLM models
+
+This repo includes a `models.json` that registers a local LiteLLM proxy and two Qwen models:
+
+- `qwen3.6-27b` — fast, thinking off
+- `qwen3.6-27b-deep` — deep reasoning with Qwen chat-template thinking enabled
+
+Pointed at `http://127.0.0.1:4001/v1` with key `sk-local-test`.
+
+Use them with:
+
+```bash
+pi --provider litellm-local --model qwen3.6-27b
+```
+
 ### Custom providers
 
 For OpenAI-compatible servers (Ollama, vLLM, LM Studio, proxies), add entries to `~/.pi/agent/models.json`.
