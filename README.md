@@ -5,7 +5,7 @@ User-level pi extensions for git workflow, web search, and agent state.
 ## Install on a new host
 
 ```bash
-git clone https://github.com/davis7dotsh/pi-dev-setup.git
+git clone https://github.com/breadpowder/pi-dev-setup.git
 cd pi-dev-setup
 ./install.sh
 ```
@@ -120,6 +120,10 @@ Create `~/.pi/agent/cloak.json` to redact secrets from files the agent reads:
   ]
 }
 ```
+
+## Multi-agent research
+
+See [`MULTI_AGENT_RESEARCH.md`](./MULTI_AGENT_RESEARCH.md) for notes on popular open-source multi-agent orchestration tools, parallel git worktree workflows, and a top-down analysis of how `oh-my-pi` extends Pi.
 
 ## Local development
 
